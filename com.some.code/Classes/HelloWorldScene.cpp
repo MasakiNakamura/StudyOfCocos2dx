@@ -1,8 +1,10 @@
 #include "HelloWorldScene.h"
 #include "SimpleAudioEngine.h"
 #include "Layer1.h"
+#include "ui\CocosGUI.h"
 
 USING_NS_CC;
+using namespace ui;
 
 Scene* HelloWorld::createScene()
 {
@@ -45,25 +47,6 @@ bool HelloWorld::init()
     closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2 ,
                                 origin.y + closeItem->getContentSize().height/2));
 
-    // create menu, it's an autorelease object
-   
-
-    /////////////////////////////
-    // 3. add your codes below...
-
-    // add a label shows "Hello World"
-    // create and initialize a label
-    
-    //auto label = Label::createWithTTF("Hello World", "fonts/Marker Felt.ttf", 24);
-    
-    // position the label on the center of the screen
-   // label->setPosition(Vec2(origin.x + visibleSize.width/2,
-   //origin.y + visibleSize.height - label->getContentSize().height));
-
-    // add the label as a child to this layer
-    //this->addChild(label, 1);
-
-    // add "HelloWorld" splash screen"
     auto sprite = Sprite::create("background.jpg");
 	sprite->setScale(1.5);
     // position the sprite on the center of the screen
@@ -72,25 +55,36 @@ bool HelloWorld::init()
     // add the sprite as a child to this layer
     this->addChild(sprite, 0);
     
-	auto play = MenuItemImage::create("start.PNG", "start.PNG", CC_CALLBACK_1(HelloWorld::clickStart, this));
-	auto options = MenuItemImage::create("options.PNG", "oprions.PNG", CC_CALLBACK_1(HelloWorld::clickOption, this));
-	
-	play->setScale(1.5);
-	options->setScale(1.5);
-
+	auto play = Button::create("start.PNG", "start.PNG");
 	play->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y + 22));
-	options->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y - 35));
+	play->setScale(1.5);
+	play->setSwallowTouches(true);
 
-	auto menu1 = Menu::create(play, options, NULL);
-	menu1->setPosition(Vec2::ZERO);
-	this->addChild(menu1, 0);
+	play->addTouchEventListener([&](Ref *Sender, Widget::TouchEventType type)
+	{
+		switch (type){
+		case cocos2d::ui::Widget::TouchEventType::BEGAN:
+			CCLOG("aaaaaaa");
+			Layer1 *layer1 = Layer1::create();
+			this->addChild(layer1, 1);
+			break;
+		}
+	});
+	this->addChild(play);
+
+	auto options = Button::create("options.PNG", "options.PNG");
+	options->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y - 35));
+	
+	options->setScale(1.5);
+	//auto menu1 = Menu::create(play, options, NULL);
+	//menu1->setPosition(Vec2::ZERO);
+	//this->addChild(menu1, 0);
 	return true;
 }
 
 void HelloWorld::clickStart(cocos2d::Ref* pSender){
 	CCLOG("aaaaaaa");
 	Layer1 *layer1 = Layer1::create();
-	this->setSwallowsTouches(false);
 	this->addChild(layer1, 1);
 }
 
