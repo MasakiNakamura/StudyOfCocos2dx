@@ -1,4 +1,5 @@
 #pragma execution_character_set("utf-8")
+#include <time.h>
 #include "Layer1.h"
 #include "SimpleAudioEngine.h"
 #include "ui\CocosGUI.h"
@@ -13,7 +14,39 @@ bool Layer1::init()
 		return false;
 	}
 
+	char date[64];
+	time_t t = time(NULL);
+	/*strftime(date, sizeof(date), "%Y/%m/%d %H:%M:%S.%s", localtime(&t));
+	std::string dateStr(date);
+	std::string hours = cocos2d::StringUtils::format("%d ", (t / 3600 + 9) % 24);
+	std::string minutes = cocos2d::StringUtils::format("%d ", (t / 60 % 60));
+	std::string seconds = cocos2d::StringUtils::format("%d ", t % 60);
+	std::string timeStamp = dateStr + hours;
 	
+	CCLOG("timestamp %s", timeStamp.c_str());
+
+	CCLOG("%02ld\n", (t / 3600 + 9) % 24);
+	CCLOG("%02ld\n", t / 60 % 60);
+	CCLOG("%02ld\n", t % 60);*/
+
+
+	//timestamp with miliseconds yy/mm/dd HH:MM:SS.sss
+	timeval curTime;
+	gettimeofday(&curTime, NULL);
+	int milli = curTime.tv_usec / 1000;
+
+	time_t rawtime;
+	struct tm * timeinfo;
+	char buffer[80];
+
+	time(&rawtime);
+	timeinfo = localtime(&rawtime);
+	strftime(buffer, 80, "%Y/%m/%d %H:%M:%S", timeinfo);
+
+	char currentTime[84] = "";
+	sprintf(currentTime, "%s.%d", buffer, milli);
+	CCLOG("current time: %s \n", currentTime);
+
 
 
 	//getting size of screen
@@ -56,8 +89,8 @@ ScrollView *scrollView = ui::ScrollView::create();
 	scrollView->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 		
 	std::map<std::string, std::string> name_map;
-	name_map[1] = "abc";
-	name_map[2] = "def";
+	/*name_map[1] = "abc";
+	name_map[2] = "def";*/
 	
 	for (int i = 0; i < 20; i++){
 			ui::Button *button = ui::Button::create("linea.png", "linea.png");
@@ -72,6 +105,11 @@ ScrollView *scrollView = ui::ScrollView::create();
 			
 		}
 		this->addChild(scrollView);
+
+
+
+
+
 	return true;
 }
 
